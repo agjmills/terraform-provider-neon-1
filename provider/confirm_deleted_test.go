@@ -64,7 +64,9 @@ func Test_resourceProjectDeleteRetry(t *testing.T) {
 
 		diags := resourceProjectDeleteRetry(context.TODO(), d, &stubProjectDelete{deleteErr: refused})
 
-		assert.True(t, diags.HasError())
+		if !assert.True(t, diags.HasError()) {
+			return
+		}
 		assert.Contains(t, diags[0].Summary, "project has protected branch")
 		assert.Equal(t, "foo", d.Id())
 	})
@@ -169,7 +171,9 @@ func Test_deleteRetry_refusedDelete(t *testing.T) {
 
 			diags := tt.deleteFn(context.TODO(), d, client)
 
-			assert.True(t, diags.HasError())
+			if !assert.True(t, diags.HasError()) {
+				return
+			}
 			assert.Contains(t, diags[0].Summary, "delete refused")
 			assert.Equal(t, "foo", d.Id())
 		})
